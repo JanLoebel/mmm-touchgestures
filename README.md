@@ -35,6 +35,9 @@ var config = {
 | e.g.: `actions.swipeleft`   | *Optional* Define a method which get's executed if the `swipeleft` gesture will be detected. <br><br> Note: can be defined for each touch gesture, e.g.: `swiperight`, `swipeup`, ...
 | `verbose`   | *Optional* Enable/Disable logging of the module. <br><br>**Type:** `boolean` <br>Default: "false"
 
+## Actions
+Action methods can return a simple string or object. If a string or object is returned it will be used to send a notification. So if you return e.g.: `PAGE_INCREMENT` as string it will send a notification with this title. If you want to return a object assure it has a structure like: `{ notification:'PAGE_INCREMENT', payload: {} }`.
+
 ## Default configuration
 
 The default configuration looks like this:
