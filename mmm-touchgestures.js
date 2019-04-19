@@ -80,13 +80,33 @@ Module.register("mmm-touchgestures", {
 		this.callAction(gestureType);
 
 		if (this.config.notification.enabled) {
-			this.sendNotification({ action: gestureType });
+			this.sendSocketNotification(this.config.notification.senderId, { action: gestureType });
 		}
 	},
 
 	callAction: function(gestureType) {
 		if (this.config.actions && this.config.actions[gestureType]) {
-			this.config.actions[gestureType]();
+			const result = this.config.actions[gestureType]();
+			this._handleActionResult(result);	
+		}
+	},
+
+	_handleActionResult(actionResult) {
+		// If action return an object use it to send a socket notification
+		if(actionResult === undefined) {
+			this.log("No action result found");
+			return;
+		}
+
+		if(typeof actionResult === 'object' && actionResult.constructor === Object) {
+			this.log("Action result is object", actionResult);
+			this.sendNotification(actionResult.notification, actionResult.payload);
+		} else if(typeof actionResult === 'string' || actionResult instanceof String) {
+			this.log("Action result is string", actionResult);
+			this.sendNotification(actionResult);
+		} else {
+			this.log("Unknown return value", actionResult);
+			console.error('Unknown return value from action:', actionResult);
 		}
 	},
 
@@ -102,9 +122,5 @@ Module.register("mmm-touchgestures", {
 		if(this.config.verbose) {
 			console.log([].slice.apply(arguments));
 		}
-	},
-
-	sendNotification: function(data) {
-		this.sendSocketNotification(this.config.notification.senderId, data);
 	}
 });
