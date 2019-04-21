@@ -70,7 +70,7 @@ Module.register("mmm-touchgestures", {
 			hammer.get(key).set(this.config.gestures);
 		});
 
-		// Enable all directions for all possibilites, no matter what was configured
+		// Enable all directions for all possibilities, no matter what was configured
 		hammer.get("pan").set({ direction: Hammer.DIRECTION_ALL });
 		hammer.get("swipe").set({ direction: Hammer.DIRECTION_ALL });
 	},
@@ -80,7 +80,7 @@ Module.register("mmm-touchgestures", {
 		this.callAction(gestureType);
 
 		if (this.config.notification.enabled) {
-			this.sendSocketNotification(this.config.notification.senderId, { action: gestureType });
+			this.sendNotification(this.config.notification.senderId, { action: gestureType });
 		}
 	},
 
@@ -99,7 +99,7 @@ Module.register("mmm-touchgestures", {
 		}
 
 		if(typeof actionResult === 'object' && actionResult.constructor === Object) {
-			this.log("Action result is object", actionResult);
+			this.log("Action result is object", JSON.stringify(actionResult));
 			this.sendNotification(actionResult.notification, actionResult.payload);
 		} else if(typeof actionResult === 'string' || actionResult instanceof String) {
 			this.log("Action result is string", actionResult);
